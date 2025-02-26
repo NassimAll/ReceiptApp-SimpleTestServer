@@ -34,28 +34,11 @@ export async function login(req: FastifyRequest, reply: FastifyReply) {
   const isValid = await compare(password, user.password); // COntrolliamo la correttezza della pw
   if (!isValid) return reply.code(401).send({ error: 'Invalid password' });
   
-  // const payload = {
-  //   id: user.id,
-  //   username: user.username
-  // };
-
-  // const token = req.jwt.sign(payload);
-
-  // reply.setCookie('access_token', token, {
-  //   path: '/',
-  //   httpOnly: true,
-  //   secure: true,
-  // })
-
-  // return { accessToken: token };
 
   const payload = { id: user.id, username: user.username };
   const token = req.jwt.sign(payload);
   console.log(payload);
   console.log(token);
-  // Redirect all'app con il token JWT
-  ///return reply.redirect(`receiptapp://home?token=${token}`);
-  //reply.redirect(`http://localhost:8100/tabs/tab3?token=${token}`);
 
   // Ritorna il token come JSON, non come cookie
   return reply.status(200).send({ accessToken: token });
