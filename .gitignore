@@ -1,3 +1,8 @@
+appunti.txt
+eng.traineddata
+ita.traineddata
+uploads/
+
 # Logs
 logs
 *.log

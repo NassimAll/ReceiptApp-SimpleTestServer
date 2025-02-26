@@ -5,3 +5,9 @@ export interface User {
     surname: string;
     password: string;
   }
+
+  export interface TokenUser {
+    id: number;
+    username: string;
+    
+  }

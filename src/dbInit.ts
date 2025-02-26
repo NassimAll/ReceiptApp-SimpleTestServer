@@ -5,7 +5,7 @@ let dbInstance: Database<sqlite3.Database, sqlite3.Statement> | null = null; // 
 
 export async function initDatabase() {
   const db = await open({
-    filename: './receiptAppDB.db',
+    filename: './receiptScanAppDB.db',
     driver: sqlite3.Database,
   });
 
@@ -21,9 +21,12 @@ export async function initDatabase() {
   CREATE TABLE IF NOT EXISTS receipt (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
-    image BLOB NOT NULL, -- O TEXT se salvi il percorso del file
+    restaurantName  TEXT NOT NULL,
     upload_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    content TEXT, -- Campo opzionale per il testo estratto dall'AI
+    address  TEXT NOT NULL,
+    totalSpent REAL NOT NULL,
+    receiptDate DATETIME NOT NULL,
+    imagePath  TEXT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) -- Chiave esterna a users
   );
   `);

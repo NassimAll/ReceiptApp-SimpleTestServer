@@ -14,7 +14,15 @@ export async function signup(req: FastifyRequest, reply: FastifyReply) {
 
   if(!result) return reply.code(401).send({ error: 'Invalid data' });
 
-  return reply.code(201).send(result);
+ // Reindirizza alla pagina di successo
+ return reply
+ .code(302)
+ .header('Location', '/signup-success') // Specifica l'URL di reindirizzamento
+ .send();}
+
+export async function successPage(req: FastifyRequest, reply: FastifyReply) {
+  // Restituisci il file HTML per la pagina di successo
+  return reply.type('text/html').sendFile('successPage.html', path.join(__dirname, '../../frontend'));
 }
 
 // POST: Login Controller
@@ -43,13 +51,14 @@ export async function login(req: FastifyRequest, reply: FastifyReply) {
 
   const payload = { id: user.id, username: user.username };
   const token = req.jwt.sign(payload);
-
+  console.log(payload);
+  console.log(token);
   // Redirect all'app con il token JWT
-  //return reply.redirect(`receiptapp://tabs/tab1?token=${token}`);
-  reply.redirect(`http://localhost:8100/tabs/tab3?token=${token}`);
+  ///return reply.redirect(`receiptapp://home?token=${token}`);
+  //reply.redirect(`http://localhost:8100/tabs/tab3?token=${token}`);
 
   // Ritorna il token come JSON, non come cookie
-  //return reply.send({ accessToken: token });
+  return reply.status(200).send({ accessToken: token });
 }
 
 // Routes for Frontend (Get Forms)

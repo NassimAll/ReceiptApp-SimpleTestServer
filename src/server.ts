@@ -6,13 +6,18 @@ import fCookie from '@fastify/cookie'
 import { initDatabase } from './dbInit';
 import fastifyStatic from '@fastify/static';
 import path from 'path';
+import fastifyMultipart from '@fastify/multipart';
+
 
 import { JWT } from '@fastify/jwt'
-
+import cors from '@fastify/cors';
+import apiRoutes from './routes/apiRoutes';
 declare module 'fastify' {
   interface FastifyRequest {
     jwt: JWT
   }
+
+
 }
 
 
@@ -28,12 +33,24 @@ const fastifyFormbody = require('@fastify/formbody'); // Usa la versione aggiorn
 
 // Registra il plugin
 fastify.register(fastifyFormbody);
+fastify.register(fastifyMultipart);
+
 
 // Servire i file statici dalla cartella "public"
 fastify.register(fastifyStatic, {
   root: path.join(__dirname, '../frontend'),
   prefix: '/frontend/',
 });
+
+// 🔥 Abilita CORS per permettere richieste dal client Ionic
+fastify.register(cors, {
+  origin: '*', // ❗ Permette richieste da tutti i domini (puoi specificare l'origine)
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Metodi HTTP consentiti
+  allowedHeaders: ['Content-Type', 'Authorization'], // Header consentiti
+  credentials: true // Se servono i cookie
+});
+
+
 
 fastify.addHook('preHandler', (req, res, next) => {
   // here we are
@@ -54,6 +71,8 @@ fastify.register(fCookie, {
 
   // Register routes
   fastify.register(authRoutes);
+  fastify.register(apiRoutes);
+
 
   // Start server
   const PORT = process.env.PORT || 3000;
